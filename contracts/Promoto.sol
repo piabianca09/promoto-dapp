@@ -7,16 +7,18 @@ contract PromotoFactory {
         string artistType;
         string description;
         bool isValidArtist;
+        address artistAdd;
     }
 
     mapping(address => Artist) private artists;
     mapping(address => string[]) private subscribers;
+    mapping(address => uint) private balances;
     
     address[] private artistsList;
 
     function registerArtist(string _name, string _artistType, string _description) public {
         //require that artist is not a registered artist
-        artists[msg.sender] = Artist(_name, _artistType, _description, true);
+        artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender);
         artistsList.push(msg.sender);
     }
 
@@ -24,14 +26,20 @@ contract PromotoFactory {
         return artistsList.length;
     }
     
-    function subscribeToArtist(address _artistAdd, uint _subscriptionCategory) public view returns (string) {
-        //require that artist is a valid artist
-        require(artists[_artistAdd].isValidArtist == true);
-        if (keccak256(_subscriptionCategory) == keccak256("tier1")) {
-            return "you have subscribe to tier 1";
-        }
-        else {
-            return "no available tier";
-        }
+    function pay(address _artistAdd) payable public {
+        balances[_artistAdd] += msg.value;
+    }
+
+    function cashOut() public returns (uint) {
+        require(balances[msg.sender] > 0);
+        uint amountToWithdraw = balances[msg.sender];
+        balances[msg.sender] = 0;
+        msg.sender.transfer(amountToWithdraw);
+        return (balances[msg.sender]);
+    }
+    
+    function checkBalance() public view returns (uint) {
+        require(artists[msg.sender].artistAdd == msg.sender);
+        return balances[msg.sender];
     }
 }
