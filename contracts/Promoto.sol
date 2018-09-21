@@ -9,20 +9,29 @@ contract PromotoFactory {
         bool isValidArtist;
         address artistAdd;
         mapping(address => bool) subscribers;
+        uint subscribersCount;
     }
 
     mapping(address => Artist) private artists;
     mapping(address => uint) private balances;
-    mapping(address => Artist[]) private subscribers;
+    mapping(address => address[]) private subscribedArtists; //list of artists that the user subscribed
 
-    
     
     address[] private artistsList;
-    uint private subscribersCount;
 
+    modifier hasValue {
+        require(msg.value > 0);
+        _;
+    }
+    
+    modifier hasBalance {
+        require(balances[msg.sender] > 0);
+        _;
+    }
+    
     function registerArtist(string _name, string _artistType, string _description) public {
-        //require that artist is not a registered artist
-        artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender);
+        require(artists[msg.sender].isValidArtist == false);
+        artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender, 0);
         artistsList.push(msg.sender);
     }
 
@@ -30,15 +39,15 @@ contract PromotoFactory {
         return artistsList.length;
     }
     
-    function pay(address _artistAdd) payable public {
+
+    function pay(address _artistAdd) payable hasValue public {
+        require(!artists[_artistAdd].subscribers[msg.sender]);
         subscribeToArtist(_artistAdd);
         balances[_artistAdd] += msg.value;
     }
 
-    function cashOut() public returns (uint) {
-        require(balances[msg.sender] > 0);
+    function cashOut() public hasBalance returns (uint) {
         uint amountToWithdraw = balances[msg.sender];
-        balances[msg.sender] = 0;
         msg.sender.transfer(amountToWithdraw);
         return (balances[msg.sender]);
     }
@@ -52,11 +61,14 @@ contract PromotoFactory {
         //check if msg.sender is already a subscriber
         require(artists[_artistAdd].isValidArtist == true);
         require(!artists[_artistAdd].subscribers[msg.sender]);  
-        artists[_artistAdd].subscribers[msg.sender] = true;
-        subscribersCount++;
+        //add user to list of artist subscribers
+        artists[_artistAdd].subscribers[msg.sender] = true ;
+        artists[_artistAdd].subscribersCount++;
+        //add artist to the list of subscribedArtists of the user
+        subscribedArtists[msg.sender].push(_artistAdd);
     }
     
     function getSubscribersCount() public view returns (uint) {
-        return subscribersCount;
+        return artists[msg.sender].subscribersCount;
     }
 }
