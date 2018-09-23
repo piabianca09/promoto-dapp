@@ -37,7 +37,7 @@ contract PromotoFactory {
 
     function getNumberOfArtists() public view returns(uint) {
         return artistsList.length;
-    }
+    } 
     
 
     function pay(address _artistAdd) payable hasValue public {
@@ -47,8 +47,10 @@ contract PromotoFactory {
     }
 
     function cashOut() public hasBalance returns (uint) {
+        require(artists[msg.sender].artistAdd == msg.sender);
         uint amountToWithdraw = balances[msg.sender];
         msg.sender.transfer(amountToWithdraw);
+        balances[msg.sender] = 0;
         return (balances[msg.sender]);
     }
     
