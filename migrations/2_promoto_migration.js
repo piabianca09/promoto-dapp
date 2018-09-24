@@ -1,4 +1,4 @@
-var Promoto = artifacts.require("./Promoto.sol");
+var Promoto = artifacts.require("./PromotoFactory.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(Promoto);

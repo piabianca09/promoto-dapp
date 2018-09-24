@@ -29,8 +29,17 @@ contract PromotoFactory {
         _;
     }
     
-    function registerArtist(string _name, string _artistType, string _description) public {
+    modifier isOwner {
+        require(artists[msg.sender].artistAdd == msg.sender);
+        _;
+    }
+    
+    modifier notAnArtist {
         require(artists[msg.sender].isValidArtist == false);
+        _;
+    }
+    
+    function registerArtist(string _name, string _artistType, string _description) notAnArtist public {
         artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender, 0);
         artistsList.push(msg.sender);
     }
@@ -40,33 +49,35 @@ contract PromotoFactory {
     } 
     
 
-    function pay(address _artistAdd) payable hasValue public {
-        require(!artists[_artistAdd].subscribers[msg.sender]);
+    function pay(address _artistAdd) payable hasValue public returns (string) {
+        balances[_artistAdd] += msg.value; 
         subscribeToArtist(_artistAdd);
-        balances[_artistAdd] += msg.value;
+        if (msg.value == 0.1 ether) {
+            return "tier 1";
+        } else if (msg.value == 0.3 ether) {
+            return "tier 2";
+        } else if (msg.value == 0.5 ether) {
+            return "tier 3";
+        } 
     }
 
-    function cashOut() public hasBalance returns (uint) {
-        require(artists[msg.sender].artistAdd == msg.sender);
+    function cashOut() public hasBalance isOwner returns (uint) {
         uint amountToWithdraw = balances[msg.sender];
         msg.sender.transfer(amountToWithdraw);
         balances[msg.sender] = 0;
         return (balances[msg.sender]);
     }
     
-    function checkBalance() public view returns (uint) {
-        require(artists[msg.sender].artistAdd == msg.sender);
+    function checkBalance() public isOwner view returns (uint) {
         return balances[msg.sender];
     }
-                                //address of the artist
+
     function subscribeToArtist(address _artistAdd) private {
-        //check if msg.sender is already a subscriber
         require(artists[_artistAdd].isValidArtist == true);
         require(!artists[_artistAdd].subscribers[msg.sender]);  
-        //add user to list of artist subscribers
-        artists[_artistAdd].subscribers[msg.sender] = true ;
+        require(artists[_artistAdd].artistAdd != msg.sender);
+        artists[_artistAdd].subscribers[msg.sender] = true;
         artists[_artistAdd].subscribersCount++;
-        //add artist to the list of subscribedArtists of the user
         subscribedArtists[msg.sender].push(_artistAdd);
     }
     
