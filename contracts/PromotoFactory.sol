@@ -9,18 +9,19 @@ contract PromotoFactory {
         bool isValidArtist;
         address artistAdd;
         mapping(address => Subscriber) subscribers;
-        uint subscribersCount;
+        address[] subscribersAddress;
     }
 
     struct Subscriber {
         address subscriberAdd;
         uint subscribedTime;
+        bool hasSubcribed;
     }
     
     mapping(address => Artist) private artists;
     mapping(address => uint) private balances;
     mapping(address => address[]) private subscribedArtists; //list of artists that the user subscribed
-
+    
     
     address[] private artistsList;
 
@@ -50,14 +51,13 @@ contract PromotoFactory {
     }
     
     function registerArtist(string _name, string _artistType, string _description) notAnArtist public {
-        artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender, 0);
+        artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender, new address[](0));
         artistsList.push(msg.sender);
     }
 
     function getNumberOfArtists() public view returns(uint) {
         return artistsList.length;
     } 
-    
 
     function pay(address _artistAdd) payable hasValue public returns (string) {
         balances[_artistAdd] += msg.value; 
@@ -84,22 +84,28 @@ contract PromotoFactory {
 
     function subscribeToArtist(address _artistAdd) private {
         require(artists[_artistAdd].isValidArtist == true);
-        require(now > artists[_artistAdd].subscribers[msg.sender].subscribedTime + 1 weeks);  
+        require(now > artists[_artistAdd].subscribers[msg.sender].subscribedTime + 6 days);  
         require(artists[_artistAdd].artistAdd != msg.sender);
-        artists[_artistAdd].subscribers[msg.sender] = Subscriber(msg.sender, now);
-        artists[_artistAdd].subscribersCount++;
-        subscribedArtists[msg.sender].push(_artistAdd);
+        if(!artists[_artistAdd].subscribers[msg.sender].hasSubcribed) {
+            artists[_artistAdd].subscribers[msg.sender] = Subscriber(msg.sender, now + 6 days, true);
+            subscribedArtists[msg.sender].push(_artistAdd);
+            artists[_artistAdd].subscribersAddress.push(msg.sender);
+        }
+        artists[_artistAdd].subscribers[msg.sender].subscribedTime = now + 6 days;
     }
     
-    function getSubscribersCount() public view isArtist returns (uint) {
-        return artists[msg.sender].subscribersCount;
+    function getSubscribersCount() view public isArtist isOwner returns (uint) {
+        uint count = 0;
+        for (uint index = 0; index < artists[msg.sender].subscribersAddress.length; index++) {
+            address subs = artists[msg.sender].subscribersAddress[index];
+            if (artists[msg.sender].subscribers[subs].subscribedTime > now) {
+                count++;
+            }
+        }
+        return count;
     }
     
     function getSubcriberTime(address _subsAdd) public view isArtist returns (uint) {
         return (artists[msg.sender].subscribers[_subsAdd].subscribedTime);
-    }
-    
-    function getSubscribedArtists() public view returns (uint) {
-        return subscribedArtists[msg.sender].length;
     }
 }
