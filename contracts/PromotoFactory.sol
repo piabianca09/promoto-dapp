@@ -8,10 +8,15 @@ contract PromotoFactory {
         string description;
         bool isValidArtist;
         address artistAdd;
-        mapping(address => bool) subscribers;
+        mapping(address => Subscriber) subscribers;
         uint subscribersCount;
     }
 
+    struct Subscriber {
+        address subscriberAdd;
+        uint subscribedTime;
+    }
+    
     mapping(address => Artist) private artists;
     mapping(address => uint) private balances;
     mapping(address => address[]) private subscribedArtists; //list of artists that the user subscribed
@@ -36,6 +41,11 @@ contract PromotoFactory {
     
     modifier notAnArtist {
         require(artists[msg.sender].isValidArtist == false);
+        _;
+    }
+    
+    modifier isArtist {
+        require(artists[msg.sender].isValidArtist == true);
         _;
     }
     
@@ -74,14 +84,22 @@ contract PromotoFactory {
 
     function subscribeToArtist(address _artistAdd) private {
         require(artists[_artistAdd].isValidArtist == true);
-        require(!artists[_artistAdd].subscribers[msg.sender]);  
+        require(now > artists[_artistAdd].subscribers[msg.sender].subscribedTime + 1 weeks);  
         require(artists[_artistAdd].artistAdd != msg.sender);
-        artists[_artistAdd].subscribers[msg.sender] = true;
+        artists[_artistAdd].subscribers[msg.sender] = Subscriber(msg.sender, now);
         artists[_artistAdd].subscribersCount++;
         subscribedArtists[msg.sender].push(_artistAdd);
     }
     
-    function getSubscribersCount() public view returns (uint) {
+    function getSubscribersCount() public view isArtist returns (uint) {
         return artists[msg.sender].subscribersCount;
+    }
+    
+    function getSubcriberTime(address _subsAdd) public view isArtist returns (uint) {
+        return (artists[msg.sender].subscribers[_subsAdd].subscribedTime);
+    }
+    
+    function getSubscribedArtists() public view returns (uint) {
+        return subscribedArtists[msg.sender].length;
     }
 }
