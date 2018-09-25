@@ -1,7 +1,7 @@
 import { ethers, provider } from './../helpers/ethers-config'
 
 
-export class Wallet {
+export default class Wallet {
     constructor(privateKey) {
         if (privateKey) {
             this.wallet = new ethers.Wallet(privateKey)

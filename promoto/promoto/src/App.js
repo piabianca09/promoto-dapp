@@ -5,6 +5,7 @@ import HomeComponent from './components/smart/Home';
 import LoginComponent from './components/dumb/Login';
 import RegisterArtistComponent from './components/dumb/RegisterArtist';
 import RegisterComponent from './components/dumb/Register';
+import CreateWalletComponent from './components/smart/CreateWallet';
 
 class App extends Component {
   render() {
@@ -18,6 +19,7 @@ class App extends Component {
             <Route path='/login' component={LoginComponent}/>
             <Route path='/register' component={RegisterComponent}/>
             <Route path='/register-artist' component={RegisterArtistComponent}/>
+            <Route path='/create-wallet' component={CreateWalletComponent}/>
           </Switch>
           </div>
         </Router>
