@@ -44,7 +44,7 @@ export default class Example extends React.Component {
                     Profile
                   </DropdownItem>
                   <DropdownItem>
-                    Wallet
+                    <Link to='/create-wallet'>Wallet</Link>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem>
