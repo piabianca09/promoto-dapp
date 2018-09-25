@@ -4,7 +4,7 @@ import NavigatorComponent from './components/Navigator'
 import HomeComponent from './components/smart/Home';
 import LoginComponent from './components/dumb/Login';
 import RegisterArtistComponent from './components/dumb/RegisterArtist';
-import RegisterComponent from './components/dumb/RegisterArtist';
+import RegisterComponent from './components/dumb/Register';
 
 class App extends Component {
   render() {

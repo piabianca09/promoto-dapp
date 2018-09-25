@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   Collapse,
   Navbar,
@@ -10,9 +10,8 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem } from 'reactstrap'
-import { Link, withRouter } from 'react-router-dom'
-import ProfileComponent from './smart/Profile'
+  DropdownItem } from 'reactstrap';
+  import { Link, withRouter } from 'react-router-dom';
 
 export default class Example extends React.Component {
   constructor(props) {
@@ -32,17 +31,20 @@ export default class Example extends React.Component {
     return (
       <div>
         <Navbar color="light" light expand="md">
-          <NavbarBrand><Link to='/'>Promoto</Link></NavbarBrand>
+          <NavbarBrand>Promoto</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  User
+                    User
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem>
-                    <Link to='/profile'> Profile </Link>
+                    Profile
+                  </DropdownItem>
+                  <DropdownItem>
+                    Wallet
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem>

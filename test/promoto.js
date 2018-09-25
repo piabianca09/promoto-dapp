@@ -1,34 +1,96 @@
 var Promoto = artifacts.require("./PromotoFactory.sol")
-const assert = require(`assert`);
-const ganache = require(`ganache-cli`);
-const Web3 = require(`web3`);
-const web3 = new Web3(ganache.provider());
-const json = require(`./../build/contracts/PromotoFactory.json`);
-
-let promotoInstance
-let accounts
-const interface = json[`abi`];
-const bytecode = json[`bytecode`];
 
 contract("Promoto", async (accounts) => {
+    let promotoInstance
 
-    beforeEach('setup contract for each test', async () =>  {
-        promotoInstance = await Promoto.deployed()
-        accounts = await web3.eth.getAccounts()
-    });
-    
-    it("should allow the user to be an artist", async () => {
-        user = accounts[1]
-        await promotoInstance.medthods.registerArtist("testName", "testType","testDesc").send({ from: user })
-        artist = await promotoInstance.methods.user().call(); 
-        assert.equal(artist, user, "The user is the one who called the register as an artist.")
-    });
+    describe("PromotoFactory initial tests", () => {
+        beforeEach('setup contract for each test', async () => {
+            promotoInstance = await Promoto.deployed()
+        })
 
-    // it("should not allow an existing artist to be an artist", async () => {
+        it("The contract should start with zero artists", async () => {
+            let numberOfArtists = await promotoInstance.getNumberOfArtists() || 0
+            assert.equal(numberOfArtists, 0, 'expected length not match')
+        })
 
-    // });
+        it("Should not be able to subscribe if there are no artists available", async () => {
+            let error = null;
+            try {
+                let artists = await promotoInstance.subscribeToArtist(account[0], {from: accounts[1]})
+            } catch (err) {
+                error = err;
+            }
+            assert.notEqual(error, null, "We are able to subscribe")
+        })
 
-    // it("should allow users to subscribe to the artist", async () => {
+    })
 
-    // });
+    describe("Main functionalities", () => {
+        beforeEach('setup contract for each test', async () => {
+            promotoInstance = await Promoto.deployed()
+        })
+
+        it("Should be able to register as an artist and increase the artist count", async () => {
+            await promotoInstance.registerArtist('test', 'singer', 'description',{from : accounts[0]})
+            let numberOfArtists = await promotoInstance.getNumberOfArtists()
+            assert.equal(numberOfArtists, 1, 'The artists count should now be equal to one')
+        })
+        
+        it("Initial balance of the artist should be equal to zero", async () => {
+            let artistBalance = await promotoInstance.checkBalance({from: accounts[0]})
+            assert.equal(artistBalance, 0, 'The artists initial balance should be equal to zero')
+        })
+
+        it("Initial number of subscribers should be equal to zero", async () => {
+            let artistSubscribers = await promotoInstance.getSubscribersCount({from: accounts[0]})
+            assert.equal(artistSubscribers, 0, 'The artists number of initial subscribers should be equal to zero')
+        })
+
+        it("Should be able to subscribe to any registered artists", async () => {
+            await promotoInstance.subscribeToArtist(accounts[0], {from: accounts[1]})
+            let numberOfSubscribers = await promotoInstance.getSubscribersCount({from: accounts[0]})
+            assert.equal(numberOfSubscribers, 1, 'The artists subscribers should be equal to one')
+        })
+
+        it("Should be able to see the number of subscribers", async () => {
+            let numberOfSubscribers = await promotoInstance.getSubscribersCount({from: accounts[0]})
+            assert.equal(numberOfSubscribers, 1, "You should be an artist")
+        })
+
+        it("Should not be able to get subscribers count if you are not an artist", async () => {
+            let error = null;
+            try {
+                let artists = await promotoInstance.getSubscribersCount({from: accounts[1]})
+            } catch (err) {
+                error = err;
+            }
+            assert.notEqual(error, null, "We are able to get the subscribers count")
+        })
+
+        it("should not be able to subscribe if you have an on going subscription to the same artist", async () => {
+
+        })
+
+        it("Should not be able to subscribe to users that are not registered as an artist", async () => {
+            let error = null
+            try {
+                let artists = await promotoInstance.subscribeToArtist(accounts[1], {from: accounts[2]})
+            } catch (err) {
+                error = err
+            }
+            assert.notEqual(null, error, 'The artists should not be a registered artist')
+        })
+
+        it("Subscription should end", async () => {
+
+        })
+
+        it("artists should be able to check balance", async () => {
+
+        })
+
+        it("artists should be able to cash out their balance", async () => {
+
+        })
+    })
 })

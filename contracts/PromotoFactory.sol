@@ -40,17 +40,18 @@ contract PromotoFactory {
         _;
     }
     
-    modifier notAnArtist {
-        require(artists[msg.sender].isValidArtist == false);
-        _;
-    }
-    
     modifier isArtist {
         require(artists[msg.sender].isValidArtist == true);
         _;
     }
     
-    function registerArtist(string _name, string _artistType, string _description) notAnArtist public {
+    modifier hasAvailableArtists {
+        require(artistsList.length > 0);
+        _;
+    }
+
+    function registerArtist(string _name, string _artistType, string _description) public {
+        require(artists[msg.sender].isValidArtist == false);
         artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender, new address[](0));
         artistsList.push(msg.sender);
     }
@@ -82,7 +83,7 @@ contract PromotoFactory {
         return balances[msg.sender];
     }
 
-    function subscribeToArtist(address _artistAdd) private {
+    function subscribeToArtist(address _artistAdd) hasAvailableArtists public {
         require(artists[_artistAdd].isValidArtist == true);
         require(now > artists[_artistAdd].subscribers[msg.sender].subscribedTime + 6 days);  
         require(artists[_artistAdd].artistAdd != msg.sender);
