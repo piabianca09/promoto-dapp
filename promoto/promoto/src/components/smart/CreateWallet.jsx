@@ -21,7 +21,7 @@ class CreateWalletComponent extends Component {
         this.setState({ client })
         sessionStorage.setItem('jsonwallet', encrypted)
         const currentSession = sessionStorage.getItem('jsonwallet')
-        const blob = new Blob([currentSession], { type: "application/json" });
+        const blob = new Blob([currentSession], { type: "application/json" })
         saveAs(blob, "jsonwallet.json")
     }
 

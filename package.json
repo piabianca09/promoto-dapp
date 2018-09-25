@@ -1,0 +1,32 @@
+{
+  "name": "promoto-dapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "ganache-cli": "^6.1.8",
+    "solidity-coverage": "^0.5.11",
+    "web3": "^1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "test:run:server": "testrpc-sc --port 8555 -l 0xfffffffffff -g 0x01",
+    "test:coverage": "solidity-coverage"  
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piabianca09/promoto-dapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/piabianca09/promoto-dapp/issues"
+  },
+  "homepage": "https://github.com/piabianca09/promoto-dapp#readme"
+}

@@ -86,7 +86,7 @@ contract("Promoto", async (accounts) => {
         })
 
         it("artists should be able to check balance", async () => {
-
+            
         })
 
         it("artists should be able to cash out their balance", async () => {

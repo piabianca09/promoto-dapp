@@ -6,6 +6,7 @@ import LoginComponent from './components/dumb/Login';
 import RegisterArtistComponent from './components/dumb/RegisterArtist';
 import RegisterComponent from './components/dumb/Register';
 import CreateWalletComponent from './components/smart/CreateWallet';
+import ViewWalletComponent from './components/smart/ViewWallet';
 
 class App extends Component {
   render() {
@@ -20,6 +21,7 @@ class App extends Component {
             <Route path='/register' component={RegisterComponent}/>
             <Route path='/register-artist' component={RegisterArtistComponent}/>
             <Route path='/create-wallet' component={CreateWalletComponent}/>
+            <Route path='/view-wallet' component={ViewWalletComponent}/>
           </Switch>
           </div>
         </Router>

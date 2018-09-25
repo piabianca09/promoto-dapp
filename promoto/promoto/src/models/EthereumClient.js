@@ -1,4 +1,4 @@
-import { ethers, provider } from './../helpers/ethers-config'
+import { ethers } from './../helpers/ethers-config'
 import Wallet from './Wallet'
 export default class EtheriumClient {
     constructor() {
