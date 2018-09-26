@@ -9,21 +9,26 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem } from 'reactstrap';
-  import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import {firebase, databaseCollection} from './../firebase.js'
 
 export default class Example extends React.Component {
   constructor(props) {
-    super(props);
-
-    this.toggle = this.toggle.bind(this);
+    super(props)
+    this.toggle = this.toggle.bind(this)
     this.state = {
       isOpen: false
     };
+    this.handleLogout = this.handleLogout.bind(this)
   }
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
+  }
+
+  async handleLogout () {
+    await firebase.auth().signOut()
   }
   render() {
     return (
@@ -45,7 +50,7 @@ export default class Example extends React.Component {
                     <Link to='/create-wallet'>Wallet</Link>
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem>
+                  <DropdownItem onClick={this.handleLogout}>
                     Logout
                   </DropdownItem>
                 </DropdownMenu>
