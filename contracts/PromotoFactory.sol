@@ -1,6 +1,8 @@
 pragma solidity ^0.4.17;
+import "./SafeMath.sol";
 
 contract PromotoFactory {
+    using SafeMath for uint;
     /**
     * This is the struct where we store our Artist information.
     **/
@@ -93,7 +95,7 @@ contract PromotoFactory {
     * Returns string - Returns the string that is equal to the value that the user has pay
     **/
     function pay(address _artistAdd) payable hasValue public returns (string tier) {
-        balances[_artistAdd] += msg.value; 
+        balances[_artistAdd] = balances[_artistAdd].add(msg.value); 
         subscribeToArtist(_artistAdd);
         if (msg.value == 0.1 ether) {
             tier = "tier 1";
