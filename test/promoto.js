@@ -31,7 +31,7 @@ contract("Promoto", async (accounts) => {
         })
 
         it("Should be able to register as an artist and increase the artist count", async () => {
-            await promotoInstance.registerArtist('test', 'singer', 'description',{from : accounts[0]})
+            await promotoInstance.registerArtist('test', 'singer', 'description', 'samplehash',{from : accounts[0]})
             let numberOfArtists = await promotoInstance.getNumberOfArtists()
             assert.equal(numberOfArtists, 1, 'The artists count should now be equal to one')
         })

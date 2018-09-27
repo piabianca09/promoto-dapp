@@ -10,6 +10,7 @@ contract PromotoFactory {
         string name;
         string artistType;
         string description;
+        string ipfsHash;
         bool isValidArtist;
         address artistAdd;
         mapping(address => Subscriber) subscribers;
@@ -76,9 +77,9 @@ contract PromotoFactory {
     * @param _artistType string - The type of the artist.
     * @param _description string - The description of the artist.
     **/
-    function registerArtist(string _name, string _artistType, string _description) public {
+    function registerArtist(string _name, string _artistType, string _description, string _ipfsHash) public {
         require(artists[msg.sender].isValidArtist == false);
-        artists[msg.sender] = Artist(_name, _artistType, _description, true, msg.sender, new address[](0));
+        artists[msg.sender] = Artist(_name, _artistType, _description, _ipfsHash, true, msg.sender, new address[](0));
         artistsList.push(msg.sender);
     }
     /**
