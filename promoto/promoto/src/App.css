@@ -1,3 +1,10 @@
+@import url(https://fonts.googleapis.com/css?family=Arvo:700);
+@import url(https://fonts.googleapis.com/css?family=Seaweed+Script);
+body {
+    padding: 5vh;
+    background: #eee url(https://subtlepatterns.com/patterns/extra_clean_paper.png);
+  }
+
 button.button1 {
     background-color: #d57897;
     border: #d57897;
@@ -24,3 +31,182 @@ button.button1:hover {
     margin-right: auto;
     margin-top: 30px;
   }
+
+.app-container-nonuser {
+    text-align: left;
+    padding: 1em;
+    margin: 1em;
+    border: 2px solid #d3d3d3;
+    border-radius: .5em;
+    vertical-align: middle;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    margin-top: 100px;
+}
+
+hr.center-hr {
+    border-top: 3px double #8c8b8b;
+    width: 100vh;
+}
+
+hr.center-hr {
+    overflow: visible; /* For IE */
+    padding: 0;
+    border: none;
+    border-top: medium double #333;
+    color: #333;
+    text-align: center;
+}
+
+hr.center-hr:after {
+    content: "or";
+    display: inline-block;
+    position: relative;
+    top: -0.7em;
+    font-size: 1.5em;
+    padding: 0 0.25em;
+    background: white;
+}
+
+#logo {
+    font-family: 'Open Sans', sans-serif;
+    color: #555;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    text-shadow: #EDEDED 3px 2px 0;
+    position: relative;
+}
+
+span.title, span.title:after {
+    font-weight: 900;
+    color: #d57897;
+    white-space: nowrap;
+    display: inline-block;
+    position: center;
+    letter-spacing: .1em;
+    padding: .2em 0 .25em 0;
+}
+
+span.title {
+    font-size: 4em;
+    z-index: 100;
+    text-shadow: .04em .04em 0 #9cb8b3;
+}
+
+span.title:after {
+    content: attr(data-shadow-text);
+    color: rgba(0,0,0,.35);
+    text-shadow: none;
+    position: absolute;
+    left: .0875em;
+    top: .0875em;
+    z-index: -1;
+    -webkit-mask-image: url(//f.cl.ly/items/1t1C0W3y040g1J172r3h/mask.png);
+}
+
+.script {
+    font-family: "Seaweed Script";
+    color: #d57897;
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    margin:0;
+    margin-top: 5vh;
+  }
+  .script span {
+    background-color: #e8e8e8;
+  }
+  .script:before {
+    content:"";
+    display: block;
+    position: absolute;
+    z-index:-1;
+    top: 50%;
+    width: 100%;
+    border-bottom: 3px solid #fff;
+  }
+
+  #menu {
+    /* width: 50px; */
+    height: 42px;
+    list-style: none;
+    margin: 10px 0 0 0; 
+    padding: 25px 10px;
+    border-bottom: 4px double #AAA;
+    position: relative;
+    text-align: center;
+  }
+  #menu p {
+    display: inline-block;
+    width: 173px;
+    margin: 0 10px;
+    position: relative;
+    -webkit-transform: skewy(-3deg);
+    -webkit-backface-visibility: hidden;
+    -webkit-transition: 200ms all;
+  }
+  #menu p a {
+    text-transform: uppercase;
+    font-family: 'Squada One', cursive;
+    font-weight: 800;
+    display: block;
+    background: #FFF;
+    padding: 2px 10px;
+    color: #333;
+    font-size: 25px;
+    text-align: center;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+    text-shadow: 
+          1px 1px 0px #FFF, 
+          2px 2px 0px #999,
+          3px 3px 0px #FFF;
+      background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0,0,0,.05) 100%);
+      -webkit-transition: 1s all;
+      background-image: -webkit-linear-gradient(left top, 
+          transparent 0%, transparent 25%, 
+          rgba(0,0,0,.15) 25%, rgba(0,0,0,.15) 50%, 
+          transparent 50%, transparent 75%, 
+          rgba(0,0,0,.15) 75%);
+    background-size: 4px 4px;
+      box-shadow: 
+          0 0 0 1px rgba(0,0,0,.4) inset, 
+          0 0 20px -5px rgba(0,0,0,.4),
+          0 0 0px 3px #FFF inset;
+  }
+  #menu p:hover {
+      width: 203px;
+      margin: 0 -5px;
+  }
+  #menu a:hover {
+    color: #d90075;
+  }
+  #menu p:after,
+  #menu p:before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    background: #BBB;
+    -webkit-transform: skewY(8deg);
+    x-index: -3;
+      border-radius: 4px;
+  }
+  #menu p:after {
+      background-image: -webkit-linear-gradient(left, transparent 0%, rgba(0,0,0,.4) 100%);
+    right: 0;
+    top: -4px; 
+  }
+  #menu p:before {
+    left: 0;
+    bottom: -4px;
+      background-image: -webkit-linear-gradient(right, transparent 0%, rgba(0,0,0,.4) 100%);
+  }
+
+  
