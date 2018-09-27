@@ -24,14 +24,15 @@ class App extends Component {
         }
     })
   }
-  
 
   render() {
     return (
       <div className="App">
         <Router>
           <div>
+            <div>
             { this.state.user && <NavigatorComponent /> }
+            </div>
             <Switch>
               <NonUserRoute path='/login' component={LoginComponent} user={this.state.user}/>
               <NonUserRoute path='/register' component={RegisterComponent} user={this.state.user}/>

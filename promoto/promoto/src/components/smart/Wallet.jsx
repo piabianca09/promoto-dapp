@@ -1,27 +1,38 @@
 import React, { Component } from 'react'
-import { Button, Form, FormGroup, Input, Container, Row, Col, FormText, InputGroup,
+import { Button, Input, Container, Row, Col, FormText, InputGroup,
     InputGroupAddon } from 'reactstrap'
 import EthereumClient from './../../models/EthereumClient'
 import { saveAs } from 'file-saver/FileSaver'
+import { withRouter } from 'react-router-dom';
+import Wallet from './../../models/Wallet'
 
 class CreateWalletComponent extends Component {
     constructor(props) {
         super(props)
         this.state ={
-            client: {}
+            client: {},
+            modal: false
         }
+        this.handleInput = this.handleInput.bind(this)
         this.onUpload = this.onUpload.bind(this)
         this.decryptWallet = this.decryptWallet.bind(this)
-        // this.getBalance = this.getBalance.bind(this)
+        this.walletInfo = this.walletInfo.bind(this)
         this.generateWallet = this.generateWallet.bind(this)
+        this.showDiv = this.showDiv.bind(this)
+    }
+
+    handleInput(event) {
+        const {id, value} = event.target 
+        this.setState({[id]: value})
     }
 
     async generateWallet() {
         let client = new EthereumClient()
         await client.generateWallet()
         const { wallet } = client.wallet
-        const encrypted = await client.encryptWallet(wallet, 'test')
-        console.log(encrypted);
+        const createPassword = this.state.createPassword
+        console.log(createPassword)
+        const encrypted = await client.encryptWallet(wallet, createPassword)
         client = {...client, wallet}
         this.setState({ client })
         sessionStorage.setItem('jsonwallet', encrypted)
@@ -46,68 +57,69 @@ class CreateWalletComponent extends Component {
     async decryptWallet () {
         const jsonwallet = sessionStorage.getItem("jsonwallet")
         let client = new EthereumClient()
-        const decryptedWallet = await client.decryptWallet(jsonwallet, 'test')
+        let openPassword = this.state.openPassword
+        const decryptedWallet = await client.decryptWallet(jsonwallet, openPassword)
         this.setState({decryptedWallet})
+        this.walletInfo()
     }   
     
-    // async getBalance () {
-    //     const wallet = new Wallet()
-    //     const balance = await wallet.getBalance(this.state.decryptedWallet.address)
-    //     this.setState({balance})
-    // }
+    async walletInfo () {
+        this.showDiv()
+        const wallet = new Wallet()
+        const balance = await wallet.getBalance(this.state.decryptedWallet.address)
+        this.setState({balance})
+        const address = this.state.decryptedWallet.address
+        this.setState({address})
+    }
+
+    showDiv() {
+        document.getElementById('balance-div').style.display = "block";
+     }
 
     render() { 
         return ( 
             <div>
-                <Container className="app-container">
+                <Container>
                     <Row>
-                        <Col xs="2" sm="2"></Col>
-                        <Col xs="8" sm="8">
-                            <h1 className="display-5">Create Wallet</h1>
-
-                            <InputGroup>
-                                <Input type="password" name="password" id="examplePassword" placeholder="password" />
-                                <InputGroupAddon addonType="prepend">
-                                    <Button block className="button1" onClick={this.generateWallet}>CREATE WALLET</Button>
-                                </InputGroupAddon>
-                            </InputGroup>
-
-                            {/* <Form>
-                                <FormGroup>
-                                    <Label for="examplePassword" className="mr-sm-2">Password</Label>
-                                    <Input type="password" name="password" id="examplePassword" placeholder="secret" />
-                                </FormGroup>   
-                                <hr className="my-2" />
-                                <Button block className="button1" onClick={this.generateWallet}>CREATE WALLET</Button>
-                            </Form> */}
+                        <Col>
+                            <div id="balance-div" style={{display:'none', borderLeft:'solid 5px', borderLeftColor:'#d57897', marginLeft:'10px'}}>
+                                <h1 className="display-4">Wallet</h1>    
+                                <h6>{`Balance: ${this.state.balance}`}</h6>
+                                <h6>{`Address: ${this.state.address}`}</h6>
+                            </div>
                         </Col>
-                        <Col xs="2" sm="2"></Col>
                     </Row>
-                </Container>
-                <hr className="center-hr"/>
-                <Container className="app-container">
                     <Row>
-                        <Col xs="2" sm="2"></Col>
-                        <Col xs="8" sm="8">
-                        <h1 className="display-5">View Wallet</h1>
-                            <Form>
-                                <FormGroup>
-                                    <Input type="file" name="file" id="exampleFile" onChange={this.onUpload}/>
-                                    <FormText color="muted">
-                                        Upload your json file here..
-                                    </FormText>
-                                </FormGroup>
-                                <hr className="my-2" />
-                                <h1>{this.state.balance}</h1>
-                                <Button block className="button1" onClick={this.decryptWallet}>View Wallet</Button>
-                            </Form>
+                        <Col xs="12" md="6">
+                            <div className="app-container"> 
+                                <h1 className="display-4">Create Wallet</h1>
+                                <InputGroup>
+                                    <Input type="password" name="createPassword" id="createPassword" placeholder="password" onChange={this.handleInput}/>
+                                    <InputGroupAddon addonType="prepend">
+                                        <Button block className="button1" onClick={this.generateWallet}>GENERATE WALLET</Button>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                            </div>
                         </Col>
-                        <Col xs="2" sm="2"></Col>
+                        <Col xs="12" md="6">
+                            <div className="app-container">
+                                <h1 className="display-4">View Wallet</h1>
+                                <Input type="password" name="openPassword" id="openPassword" placeholder="password" onChange={this.handleInput} style={{marginBottom:'1vh'}}/>
+                                <Input type="file" name="file" id="exampleFile" onChange={this.onUpload}/>
+                                <FormText color="muted">
+                                    Upload your json file here..
+                                </FormText>
+                                <hr className="my-2" />
+                                <Button block className="button1" onClick={this.decryptWallet}>VIEW WALLET</Button>
+                            </div>
+                        </Col>
                     </Row>
+                  
+
                 </Container>
             </div>
         );
     }
 }
  
-export default CreateWalletComponent;
+export default withRouter(CreateWalletComponent);

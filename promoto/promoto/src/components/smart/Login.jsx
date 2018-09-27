@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap'
 import {firebase} from './../../firebase.js'
-import { withRouter, Link } from 'react-router-dom';
+import Login from './../dumb/Login'
+import { Container, Row, Col } from 'reactstrap'
+import { withRouter } from 'react-router-dom';
 
 class LoginComponent extends Component {
     constructor (props) {
@@ -23,7 +24,7 @@ class LoginComponent extends Component {
         const email = this.state.email
         const password = this.state.password
         await firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password)
-        this.props.history.push('/')
+        this.props.history.push('/wallet')
     }
 
     render() { 
@@ -34,22 +35,11 @@ class LoginComponent extends Component {
                         <Col xs="1" sm="2"></Col>
                         <Col xs="8" sm="8">
                             <span data-shadow-text="LOGIN" className="title">LOGIN</span>
-                            <Form>
-                                <FormGroup>
-                                    <Label for="exampleEmail" className="mr-sm-2">Email</Label>
-                                    <Input type="text" name="email" id="email" placeholder="something@idk.cool" onChange={this.handleInput} value={this.state.email}/>
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="examplePassword" className="mr-sm-2">Password</Label>
-                                    <Input type="password" name="password" id="password" placeholder="******" onChange={this.handleInput} value={this.state.password}/>
-                                </FormGroup>   
-                                <div id="menu">
-                                    <p><a href="#" onClick={this.handleLogin}>Submit</a></p>
-                                </div>
-                                <div>
-                                    Not registered? <Link to='/register'> Create an account </Link>
-                                </div>
-                            </Form>
+                            <Login
+                                values={this.state}
+                                handleInput={this.handleInput}
+                                handleLogin={this.handleLogin}
+                            />
                         </Col>
                         <Col xs="1" sm="2"></Col>
                     </Row>

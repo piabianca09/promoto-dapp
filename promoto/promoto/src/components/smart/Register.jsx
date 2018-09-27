@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
+import { Container, Row, Col } from 'reactstrap';
 import {firebase, databaseCollection} from './../../firebase.js'
+import Register from './../dumb/Register'
 
 class RegisterComponent extends Component {
     state = {  }
@@ -27,7 +28,7 @@ class RegisterComponent extends Component {
                 lastName
             }
             await databaseCollection('users').doc(newUser.user.uid).set(data)
-            this.props.history.push('/create-wallet')
+            this.props.history.push('/wallet')
         } else {
             console.log("Error")
         }
@@ -38,36 +39,13 @@ class RegisterComponent extends Component {
             <Container>
                 <Row>
                     <Col xs="1" sm="2"></Col>
-                    <Col xs="8" sm="8">
+                    <Col xs="10" sm="8">
                         <span data-shadow-text="REGISTER" className="title">REGISTER</span>
-                        <Form>
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                <Label for="firstName" className="mr-sm-2">First Name</Label>
-                                <Input type="text" name="firstName" id="firstName" placeholder="First Name" onChange={this.handleInput} />
-                            </FormGroup>
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                <Label for="lastName" className="mr-sm-2">Last Name</Label>
-                                <Input type="text" name="lastName" id="lastName" placeholder="Last Name" onChange={this.handleInput} />
-                            </FormGroup>
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                <Label for="email" className="mr-sm-2">Email</Label>
-                                <Input type="email" name="email" id="email" placeholder="something@email.com" onChange={this.handleInput} />
-                            </FormGroup>
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                <Label for="examplePassword" className="mr-sm-2">Password</Label>
-                                <Input type="password" name="password" id="password" placeholder="******" onChange={this.handleInput} />
-                            </FormGroup>   
-                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                <Label for="exampleConfirmPassword" className="mr-sm-2">Confirm Password</Label>
-                                <Input type="password" name="confirm-password" id="confirmPassword" placeholder="******" onChange={this.handleInput} />
-                            </FormGroup>   
-                            <div id="menu">
-                                <p><a href="#" onClick={this.handleRegister}>Submit</a></p>
-                            </div>
-                            <div>
-                                Already have an account? <Link to='/login'> Login </Link>
-                            </div>
-                        </Form>
+                        <Register
+                            values={this.state}
+                            handleInput={this.handleInput}
+                            handleRegister={this.handleRegister}
+                        />
                     </Col>
                     <Col xs="1" sm="2"></Col>
                 </Row>

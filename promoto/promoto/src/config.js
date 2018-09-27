@@ -88,6 +88,41 @@ export const abi  = [
 	},
 	{
 		"constant": true,
+		"inputs": [
+			{
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "getArtist",
+		"outputs": [
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "artistType",
+				"type": "string"
+			},
+			{
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"name": "ipfs",
+				"type": "string"
+			},
+			{
+				"name": "subscribersCount",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [],
 		"name": "getNumberOfArtists",
 		"outputs": [
@@ -113,7 +148,21 @@ export const abi  = [
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "validToRegister",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	}
 ]
 
-export const address = '0x530aafe16cdf4b24489eae060cf98966214272be'
+export const address = '0xb8c234b27cb5cfd0480bbc5a6512573d6ca449d6'
