@@ -72,13 +72,26 @@ contract PromotoFactory {
         _;
     }
     /**
+    * Modifier used to determine if the user is not a registered artist
+    **/
+    modifier isNotAnArtist {
+        require(artists[msg.sender].isValidArtist == false);
+        _;
+    }
+    /**
+    * Used to check if the user is valid to register as an artist
+    * Returns bool - Returns if it is true or false 
+    **/
+    function validToRegister() public isNotAnArtist view returns (bool) {
+        return true;
+    }
+    /**
     * This is a function and its used to register as an artist.
     * @param _name string - The name of the artist.
     * @param _artistType string - The type of the artist.
     * @param _description string - The description of the artist.
     **/
-    function registerArtist(string _name, string _artistType, string _description, string _ipfsHash) public {
-        require(artists[msg.sender].isValidArtist == false);
+    function registerArtist(string _name, string _artistType, string _description, string _ipfsHash) isNotAnArtist public {
         artists[msg.sender] = Artist(_name, _artistType, _description, _ipfsHash, true, msg.sender, new address[](0));
         artistsList.push(msg.sender);
     }
@@ -89,6 +102,26 @@ contract PromotoFactory {
         artistsCount = artistsList.length;
         return artistsCount;
     } 
+    /**
+    * Used to get the details of artist
+    * @param _index uint - index of the artist in the array
+    * Returns string - Returns the string name
+    * Returns string - Returns the type of the artistType
+    * Returns string - Returns the description of the artist
+    * Returns string - Returns the ipfs ipfsHash
+    * Returns uint - Returns the number of subscribers
+    **/
+    function getArtist(uint _index) public view returns (string name, string artistType, string description, string ipfs, uint subscribersCount) {
+        address artistAddress = artistsList[_index];
+        Artist memory artist = artists[artistAddress];
+        return (
+            artist.name,
+            artist.artistType,
+            artist.description,
+            artist.ipfsHash,
+            artist.subscribersAddress.length
+        );
+    }
     /**
     * Used to pay for subscription of the artist
     * @param _artistAdd address - Address of the artist that the user will subscribe
