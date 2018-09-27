@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import {firebase, databaseCollection} from './../../firebase.js'
+import {firebase} from './../../firebase.js'
 import {Button} from 'reactstrap'
+import {address, abi} from './../../config'
+import {ethers, provider} from './../../helpers/ethers-config'
 
 class HomeComponent extends Component {
     constructor (props) {
         super(props)
         this.state = {  }
-        this.test = this.test.bind(this)
+        this.getArtistsCount = this.getArtistsCount.bind(this)
     }
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user)=>{
@@ -17,15 +19,18 @@ class HomeComponent extends Component {
             }
         })
     }
-
-    test() {
-        console.log(this.state.user)
+    
+    async getArtistsCount() {
+        const contract =  new ethers.Contract(address, abi, provider)
+        const artistsCount = await contract.getNumberOfArtists()
+        console.log(artistsCount.toNumber())
     }
+    
     render() { 
         return ( 
             <div>
                 This is home
-                <Button onClick={this.test}> Test </Button>
+                <Button onClick={this.getArtistsCount}>Buttoon</Button>
             </div>
          );
     }

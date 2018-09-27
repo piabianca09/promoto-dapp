@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
 import {firebase, databaseCollection} from './../../firebase.js'
 
@@ -26,17 +27,19 @@ class RegisterComponent extends Component {
                 lastName
             }
             await databaseCollection('users').doc(newUser.user.uid).set(data)
+            this.props.history.push('/create-wallet')
         } else {
             console.log("Error")
         }
+    
     }
     render() { 
         return (  
-            <Container className="app-container">
+            <Container>
                 <Row>
-                    <Col xs="2" sm="2"></Col>
+                    <Col xs="1" sm="2"></Col>
                     <Col xs="8" sm="8">
-                        <h1 className="display-5">Register</h1>
+                        <span data-shadow-text="REGISTER" className="title">REGISTER</span>
                         <Form>
                             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                                 <Label for="firstName" className="mr-sm-2">First Name</Label>
@@ -52,21 +55,25 @@ class RegisterComponent extends Component {
                             </FormGroup>
                             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                                 <Label for="examplePassword" className="mr-sm-2">Password</Label>
-                                <Input type="password" name="password" id="password" placeholder="secret" onChange={this.handleInput} />
+                                <Input type="password" name="password" id="password" placeholder="******" onChange={this.handleInput} />
                             </FormGroup>   
                             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                                 <Label for="exampleConfirmPassword" className="mr-sm-2">Confirm Password</Label>
-                                <Input type="password" name="confirm-password" id="confirmPassword" placeholder="secret" onChange={this.handleInput} />
+                                <Input type="password" name="confirm-password" id="confirmPassword" placeholder="******" onChange={this.handleInput} />
                             </FormGroup>   
-                            <hr className="my-2" />
-                            <Button block className="button1" onClick={this.handleRegister}>Submit</Button>
+                            <div id="menu">
+                                <p><a href="#" onClick={this.handleRegister}>Submit</a></p>
+                            </div>
+                            <div>
+                                Already have an account? <Link to='/login'> Login </Link>
+                            </div>
                         </Form>
                     </Col>
-                    <Col xs="2" sm="2"></Col>
+                    <Col xs="1" sm="2"></Col>
                 </Row>
             </Container>
         );
     }
 }
  
-export default RegisterComponent;
+export default withRouter(RegisterComponent);
