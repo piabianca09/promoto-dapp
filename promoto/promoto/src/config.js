@@ -40,10 +40,6 @@ export const abi  = [
 				"type": "string"
 			},
 			{
-				"name": "_artistType",
-				"type": "string"
-			},
-			{
 				"name": "_description",
 				"type": "string"
 			},
@@ -101,10 +97,6 @@ export const abi  = [
 				"type": "string"
 			},
 			{
-				"name": "artistType",
-				"type": "string"
-			},
-			{
 				"name": "description",
 				"type": "string"
 			},
@@ -115,6 +107,10 @@ export const abi  = [
 			{
 				"name": "subscribersCount",
 				"type": "uint256"
+			},
+			{
+				"name": "artistAdd",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -151,7 +147,12 @@ export const abi  = [
 	},
 	{
 		"constant": true,
-		"inputs": [],
+		"inputs": [
+			{
+				"name": "add",
+				"type": "address"
+			}
+		],
 		"name": "validToRegister",
 		"outputs": [
 			{
@@ -165,4 +166,4 @@ export const abi  = [
 	}
 ]
 
-export const address = '0xb8c234b27cb5cfd0480bbc5a6512573d6ca449d6'
+export const address = '0xb324f42aa3325a1f4d49a6b466d0fd1961db021d'

@@ -187,9 +187,9 @@ span.title:after {
     -webkit-backface-visibility: hidden;
     -webkit-transition: 200ms all;
 }
-#menu p a {
+#menu p button {
     text-transform: uppercase;
-    font-family: 'Squada One', cursive;
+    font-family: 'Raleway';
     font-weight: 800;
     display: block;
     background: #FFF;
@@ -219,31 +219,10 @@ span.title:after {
 }
 
 #menu p:hover {
-    width: 203px;
+    width: 150px;
     margin: 0 -5px;
 }
-#menu a:hover {
+#menu button:hover {
     color: #d90075;
-}
-#menu p:after,
-#menu p:before {
-    content: '';
-    position: absolute;
-    width: 50px;
-    height: 100%;
-    background: #BBB;
-    -webkit-transform: skewY(8deg);
-    x-index: -3;
-        border-radius: 4px;
-}
-#menu p:after {
-    background-image: -webkit-linear-gradient(left, transparent 0%, rgba(0,0,0,.4) 100%);
-    right: 0;
-    top: -4px; 
-}
-#menu p:before {
-    left: 0;
-    bottom: -4px;
-    background-image: -webkit-linear-gradient(right, transparent 0%, rgba(0,0,0,.4) 100%);
 }
 
