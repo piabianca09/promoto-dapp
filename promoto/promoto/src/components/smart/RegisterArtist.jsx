@@ -4,6 +4,7 @@ import {ethers, provider, ipfs} from './../../helpers/ethers-config'
 import {address, abi} from './../../config'
 import EthereumClient from './../../models/EthereumClient'
 import RegisterArtist from './../dumb/RegisterArtist'
+import { withRouter } from 'react-router-dom'
 
 class RegisterArtistComponent extends Component {
     constructor (props) {
@@ -19,6 +20,7 @@ class RegisterArtistComponent extends Component {
     handleInput(event) {
         const {id, value} = event.target 
         this.setState({[id]: value})
+        console.log(value, id)
     }
 
     async getFile(event) {
@@ -46,16 +48,21 @@ class RegisterArtistComponent extends Component {
         const artistIpfs = await ipfs.add(bufferArtist)
         const jsonwallet = sessionStorage.getItem("jsonwallet")
         let client = new EthereumClient()
-        const decryptedWallet = await client.decryptWallet(jsonwallet, '123')
+        const walletPassword = this.state.walletPassword
+        const decryptedWallet = await client.decryptWallet(jsonwallet, walletPassword)
         this.setState({decryptedWallet})
         const wallet = new ethers.Wallet(decryptedWallet.privateKey, provider)
         const contract = new ethers.Contract(address,abi,wallet)    
-        const artistType = this.state.artistType
         const description = this.state.description    
-        await contract.registerArtist(artist.username, artistType, description, artistIpfs[0].hash)
-        console.log(artistIpfs[0].hash)
+        console.log(this.state, 'sasasa')
+        console.log(description)
+        const config = {
+            gasLimit: 5000000000,
+            gasPrice: 15
+        }
+        await contract.registerArtist(artist.username, description, artistIpfs[0].hash, config )
+        this.props.history.push('/')
     }
-
 
     render() {  
         return ( 
@@ -78,4 +85,4 @@ class RegisterArtistComponent extends Component {
     }
 }
 
-export default RegisterArtistComponent;
+export default withRouter(RegisterArtistComponent);

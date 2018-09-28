@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Button, Input, Container, Row, Col, FormText, InputGroup,
-    InputGroupAddon } from 'reactstrap'
+    InputGroupAddon, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import EthereumClient from './../../models/EthereumClient'
 import { saveAs } from 'file-saver/FileSaver'
 import { withRouter } from 'react-router-dom';
 import Wallet from './../../models/Wallet'
+import {firebase} from './../../firebase.js'
 
 class CreateWalletComponent extends Component {
     constructor(props) {
@@ -19,11 +20,33 @@ class CreateWalletComponent extends Component {
         this.walletInfo = this.walletInfo.bind(this)
         this.generateWallet = this.generateWallet.bind(this)
         this.showDiv = this.showDiv.bind(this)
+        this.walletExist = this.walletExist.bind(this)
+        this.toggle = this.toggle.bind(this);
+    }
+    
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged((user)=>{
+            if (user) {
+                this.setState({user}) 
+                this.walletExist()
+                if (sessionStorage.getItem("jsonwallet") != null) {
+                    this.toggle()
+                }
+            } else {
+                this.setState({user:null})
+            }
+        })
     }
 
     handleInput(event) {
         const {id, value} = event.target 
         this.setState({[id]: value})
+    }
+
+    toggle() {
+        this.setState({
+          modal: !this.state.modal
+        });
     }
 
     async generateWallet() {
@@ -76,6 +99,12 @@ class CreateWalletComponent extends Component {
         document.getElementById('balance-div').style.display = "block";
      }
 
+    walletExist() {
+        if (sessionStorage.getItem("jsonwallet") != null) {
+            document.getElementById('balance-div').style.display = "block";
+        }
+    }
+
     render() { 
         return ( 
             <div>
@@ -104,19 +133,25 @@ class CreateWalletComponent extends Component {
                         <Col xs="12" md="6">
                             <div className="app-container">
                                 <h1 className="display-4">View Wallet</h1>
-                                <Input type="password" name="openPassword" id="openPassword" placeholder="password" onChange={this.handleInput} style={{marginBottom:'1vh'}}/>
                                 <Input type="file" name="file" id="exampleFile" onChange={this.onUpload}/>
                                 <FormText color="muted">
                                     Upload your json file here..
                                 </FormText>
                                 <hr className="my-2" />
-                                <Button block className="button1" onClick={this.decryptWallet}>VIEW WALLET</Button>
+                                <Button block className="button1" onClick={this.toggle}>IMPORT WALLET</Button>
                             </div>
                         </Col>
                     </Row>
-                  
-
                 </Container>
+                <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                <ModalHeader toggle={this.toggle}>Input Wallet Password</ModalHeader>
+                <ModalBody>
+                    <Input type="password" name="openPassword" id="openPassword" placeholder="password" onChange={this.handleInput}/>
+                </ModalBody>
+                <ModalFooter>
+                    <Button className='button1' onClick={this.decryptWallet}>Submit</Button>
+                </ModalFooter>
+                </Modal>
             </div>
         );
     }

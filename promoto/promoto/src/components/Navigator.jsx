@@ -64,18 +64,19 @@ class NavigatorContent extends Component {
   }
 
   async hasRegistered () {
-    console.log(this.state.user.hasRegistered)
     const jsonwallet = sessionStorage.getItem("jsonwallet")
-    let client = new EthereumClient()
-    const decryptedWallet = await client.decryptWallet(jsonwallet, 'test')
-    this.setState({decryptedWallet})
-    const ethWall = new ethers.Wallet(decryptedWallet.privateKey, provider)
-    const contract =  new ethers.Contract(address, abi, ethWall)
-    const  validity = await contract.validToRegister()
-    this.setState({user:{
-      ...this.state.user,
-      hasRegistered: validity
-    }})
+    if (jsonwallet) {
+      let client = new EthereumClient()
+      const decryptedWallet = await client.decryptWallet(jsonwallet, 'test')
+      this.setState({decryptedWallet})
+      const ethWall = new ethers.Wallet(decryptedWallet.privateKey, provider)
+      const contract =  new ethers.Contract(address, abi, ethWall)
+      const  validity = await contract.validToRegister()
+      this.setState({user:{
+        ...this.state.user,
+        hasRegistered: validity
+      }})
+    }
   }
 
   render() {
@@ -99,7 +100,6 @@ class NavigatorContent extends Component {
                  <Link to='/register-artist' >Register as artist</Link>
                </DropdownItem>
               }
-               
                 <DropdownItem>
                   <Link to='/wallet'>Wallet</Link>      
                 </DropdownItem>

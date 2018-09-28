@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, FormGroup, Label, Input } from 'reactstrap'
+import { Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import { Link } from 'react-router-dom';
 
 const Register = props => (
@@ -25,7 +25,7 @@ const Register = props => (
             <Input type="password" name="confirm-password" id="confirmPassword" placeholder="******" onChange={props.handleInput} />
         </FormGroup>   
         <div id="menu">
-            <p><a href="#" onClick={props.handleRegister}>Submit</a></p>
+            <p><Button onClick={props.handleRegister}>Submit</Button></p>
         </div>
         <div style={{paddingTop:'5vh'}}>
             Already have an account? <Link to='/login'> Login </Link>
