@@ -59,7 +59,6 @@ class HomeComponent extends Component {
         for (let i = 0; i < artistsCount; i++) {
             const [name, description, ipfs, subscribersCount, artistAdd] = await contract.getArtist(i)
             const ipfsValue = await axios.get(`https://gateway.ipfs.io/ipfs/${ipfs}`)
-            console.log(ipfsValue)
             const value = {name, description, ipfs, subscribersCount: subscribersCount.toNumber(), artistAdd, ...ipfsValue.data }
             data.push(value)
         }
@@ -74,38 +73,39 @@ class HomeComponent extends Component {
             const walletPassword = this.state.walletPassword
             const decryptedWallet = await client.decryptWallet(jsonwallet, walletPassword)
             this.setState({decryptedWallet})
-            console.log(decryptedWallet)
             const wallet = new ethers.Wallet(decryptedWallet.privateKey, provider)
-            const contract = new ethers.Contract(address,abi,wallet)    
+            const contract = new ethers.Contract(address,abi,wallet)  
+            console.log(this.state.amount)
+  
             const overide = {
                 value: ethers.utils.parseEther(`${this.state.amount}`),
-                gasLimit: 2000000,
-                gasPrice: 25
+                // gasLimit: 2000000,
+                // gasPrice: 25
             }
-            console.log(item.artistAdd)
-            
-            const res = await contract.pay(item.artistAdd,overide)
-
-            console.log(res)
+            const res = await contract.pay(item.artistAdd, overide)
         } catch (err) {
-            console.log(err)
         }
     }
 
     selectOption1 (amount) {
         this.setState({amount})
         document.getElementById('option1').style.background = "#d57897"
+        console.log(amount)
     }
 
     selectOption2 (amount) {
         this.setState({amount})
         document.getElementById('option2').style.background = "#d57897"
+        console.log(amount)
+
     }
 
 
     selectOption3 (amount) {
         this.setState({amount})
         document.getElementById('option3').style.background = "#d57897"
+        console.log(amount)
+
     }
 
 
@@ -187,7 +187,7 @@ class HomeComponent extends Component {
                         </Container>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" onClick={this.toggle}>Cancel</Button>
+                        <Button color="danger" onClick={this.toggle}>Close</Button>
                         <Button className='button1' onClick={this.subscribeToArtist}>Subscribe</Button>
                     </ModalFooter>
                 </Modal>

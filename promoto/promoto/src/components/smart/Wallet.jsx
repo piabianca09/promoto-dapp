@@ -54,7 +54,6 @@ class CreateWalletComponent extends Component {
         await client.generateWallet()
         const { wallet } = client.wallet
         const createPassword = this.state.createPassword
-        console.log(createPassword)
         const encrypted = await client.encryptWallet(wallet, createPassword)
         client = {...client, wallet}
         this.setState({ client })
@@ -111,11 +110,12 @@ class CreateWalletComponent extends Component {
                 <Container>
                     <Row>
                         <Col>
-                            <div id="balance-div" style={{display:'none', borderLeft:'solid 5px', borderLeftColor:'#d57897', marginLeft:'10px'}}>
+                            <div id="balance-div" style={{display:'none', borderLeft:'solid 5px', borderLeftColor:'#d57897', paddingLeft:'10px'}}>
                                 <h1 className="display-4">Wallet</h1>    
                                 <h6>{`Balance: ${this.state.balance}`}</h6>
                                 <h6>{`Address: ${this.state.address}`}</h6>
-                            </div>
+                                <Button className="button1" style={{margin: '1vh'}}>Withdraw</Button>
+                            </div> 
                         </Col>
                     </Row>
                     <Row>

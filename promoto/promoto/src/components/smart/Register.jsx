@@ -32,7 +32,6 @@ class RegisterComponent extends Component {
         } else {
             console.log("Error")
         }
-    
     }
     render() { 
         return (  

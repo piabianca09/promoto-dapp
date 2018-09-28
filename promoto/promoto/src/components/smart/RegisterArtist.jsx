@@ -13,14 +13,13 @@ class RegisterArtistComponent extends Component {
             hasRegistered: false,
          }
         this.getFile = this.getFile.bind(this)
-        this.uploadImage = this.uploadImage.bind(this)
+        this.register = this.register.bind(this)
         this.handleInput = this.handleInput.bind(this)
     }
 
     handleInput(event) {
         const {id, value} = event.target 
         this.setState({[id]: value})
-        console.log(value, id)
     }
 
     async getFile(event) {
@@ -37,7 +36,7 @@ class RegisterArtistComponent extends Component {
         return await Buffer.from(reader.result)
     }
 
-    async uploadImage() {
+    async register() {
         const results = await ipfs.add(this.state.buffer)
         const artist = {
             username: this.state.username,
@@ -54,13 +53,12 @@ class RegisterArtistComponent extends Component {
         const wallet = new ethers.Wallet(decryptedWallet.privateKey, provider)
         const contract = new ethers.Contract(address,abi,wallet)    
         const description = this.state.description    
-        console.log(this.state, 'sasasa')
-        console.log(description)
         const config = {
-            gasLimit: 5000000000,
+            gasLimit: 1000000,
             gasPrice: 15
         }
-        await contract.registerArtist(artist.username, description, artistIpfs[0].hash, config )
+        const res = await contract.registerArtist(artist.username, description, artistIpfs[0].hash, config )
+        const final = await provider.waitForTransaction(res.hash)
         this.props.history.push('/')
     }
 
@@ -74,7 +72,7 @@ class RegisterArtistComponent extends Component {
                         <RegisterArtist
                             values={this.state}
                             handleInput={this.handleInput}
-                            uploadImage={this.uploadImage}
+                            uploadImage={this.register}
                             getFile={this.getFile}
                         />
                     </Col>
