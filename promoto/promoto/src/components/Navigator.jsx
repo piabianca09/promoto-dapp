@@ -36,6 +36,7 @@ class NavigatorContent extends Component {
       isOpen: !this.state.isOpen
     });
   }
+
   componentDidMount() {
     firebase.auth().onAuthStateChanged(async (user)=>{
         if (user) {
@@ -47,10 +48,12 @@ class NavigatorContent extends Component {
         }
     })
   }
+
   async handleLogout () {
     await firebase.auth().signOut()
     sessionStorage.clear()
   }
+
   async getUser (id) {
     try {
       const docRef = await databaseCollection('users').doc(id).get()
@@ -67,11 +70,11 @@ class NavigatorContent extends Component {
     const jsonwallet = sessionStorage.getItem("jsonwallet")
     if (jsonwallet) {
       let client = new EthereumClient()
-      const decryptedWallet = await client.decryptWallet(jsonwallet, 'test')
+      const decryptedWallet = await client.decryptWallet(jsonwallet, '123')
       this.setState({decryptedWallet})
       const ethWall = new ethers.Wallet(decryptedWallet.privateKey, provider)
       const contract =  new ethers.Contract(address, abi, ethWall)
-      const  validity = await contract.validToRegister()
+      const  validity = await contract.validToRegister(decryptedWallet.address)
       this.setState({user:{
         ...this.state.user,
         hasRegistered: validity
@@ -95,11 +98,11 @@ class NavigatorContent extends Component {
               { this.state.user && `${this.state.user.firstName} ${this.state.user.lastName}` }
               </DropdownToggle>
               <DropdownMenu right>
-              {this.state.user.hasRegistered ||
                  <DropdownItem>
+                 {this.state.user.hasRegistered &&
                  <Link to='/register-artist' >Register as artist</Link>
+                  }
                </DropdownItem>
-              }
                 <DropdownItem>
                   <Link to='/wallet'>Wallet</Link>      
                 </DropdownItem>

@@ -5,7 +5,6 @@ import {Row, Col, Button, Container, Card, CardImg, CardText, CardBody,
 import {address, abi} from './../../config'
 import {ethers, provider} from './../../helpers/ethers-config'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
 import EthereumClient from './../../models/EthereumClient'
 
 class HomeComponent extends Component {
@@ -75,15 +74,10 @@ class HomeComponent extends Component {
             this.setState({decryptedWallet})
             const wallet = new ethers.Wallet(decryptedWallet.privateKey, provider)
             const contract = new ethers.Contract(address,abi,wallet)  
-            console.log(this.state.amount)
-  
-            const overide = {
-                value: ethers.utils.parseEther(`${this.state.amount}`),
-                // gasLimit: 2000000,
-                // gasPrice: 25
-            }
-            const res = await contract.pay(item.artistAdd, overide)
+            const res = await contract.pay(item.artistAdd, {value: ethers.utils.parseEther(`${this.state.amount}`)})
+            console.log(res);
         } catch (err) {
+            console.log(err)
         }
     }
 
@@ -100,12 +94,10 @@ class HomeComponent extends Component {
 
     }
 
-
     selectOption3 (amount) {
         this.setState({amount})
         document.getElementById('option3').style.background = "#d57897"
         console.log(amount)
-
     }
 
 
@@ -117,8 +109,11 @@ class HomeComponent extends Component {
                     <CardBody>
                     <CardTitle>{item.username}</CardTitle>
                     <CardText>{item.description}</CardText>
-                    <CardText>{item.subscribersCount} Subscribers</CardText>
-                    <Button color='gray' block onClick={() => this.toggle({...item,i })}>Subscribe</Button>
+                    {
+                        item.subscribersCount > 0 && 
+                        <CardText>{item.subscribersCount} Subscribers</CardText>
+                    }
+                    <Button className='buttonHome' block onClick={() => this.toggle({...item,i })}>Subscribe</Button>
                     </CardBody>
                 </Card>
             </div>
@@ -133,19 +128,20 @@ class HomeComponent extends Component {
                         <Container>
                             <div className="plate">
                                 <p className="script"><span>The Real Artists</span></p>
-                                <p className="display-4">{`Total of ${this.state.artistsNumber} artists`}</p>
-                                <Link to='/register-artist'> <p className="shadow text1">START MY PAGE</p> </Link>
+                                <p className="shadow text1">START YOUR PAGE</p>
+                                { this.state.artistsNumber > 0 && 
+                                <p className="display-4"> Total of {this.state.artistsNumber} artists </p> }
                                 <p className="script"><span>by Pia</span></p>
                             </div>
                         </Container>
                     </div>
-                    {this.state.data.length && artist()}
+                        {this.state.data.length && artist()}
                     </Col>
                     <Col xs="1" sm="2"></Col>
                 </Row>
                 { this.state.item &&
                 <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} style={{width:'100vh'}}>
-                    <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Choose your subscription plan</ModalHeader>
                     <ModalBody>
                         <p className='dispaly-2'>Become a subscriber of</p>
                         <p className='display-4'> {this.state.item.name} </p>

@@ -53,12 +53,10 @@ class RegisterArtistComponent extends Component {
         const wallet = new ethers.Wallet(decryptedWallet.privateKey, provider)
         const contract = new ethers.Contract(address,abi,wallet)    
         const description = this.state.description    
-        const config = {
-            gasLimit: 1000000,
-            gasPrice: 15
-        }
-        const res = await contract.registerArtist(artist.username, description, artistIpfs[0].hash, config )
+        console.log(artist.username, description, artistIpfs[0].hash)
+        const res = await contract.registerArtist(artist.username, description, artistIpfs[0].hash)
         const final = await provider.waitForTransaction(res.hash)
+        console.log(final)
         this.props.history.push('/')
     }
 

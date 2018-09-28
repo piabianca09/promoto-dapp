@@ -16,6 +16,16 @@ button.button1:hover {
     border: #a96483;
 }
 
+button.buttonHome {
+    background-color: gray;
+    border: gray;
+}
+
+button.buttonHome:hover {
+    background-color: #d57897;
+    border: #d57897;
+}
+
 .textarea-desc {
     resize: none;
     color: #a96483;

@@ -6,6 +6,9 @@ import { saveAs } from 'file-saver/FileSaver'
 import { withRouter } from 'react-router-dom';
 import Wallet from './../../models/Wallet'
 import {firebase} from './../../firebase.js'
+import {address, abi} from './../../config'
+import {ethers, provider} from './../../helpers/ethers-config'
+
 
 class CreateWalletComponent extends Component {
     constructor(props) {
@@ -13,7 +16,7 @@ class CreateWalletComponent extends Component {
         this.state ={
             client: {},
             modal: false
-        }
+        } 
         this.handleInput = this.handleInput.bind(this)
         this.onUpload = this.onUpload.bind(this)
         this.decryptWallet = this.decryptWallet.bind(this)
@@ -22,6 +25,9 @@ class CreateWalletComponent extends Component {
         this.showDiv = this.showDiv.bind(this)
         this.walletExist = this.walletExist.bind(this)
         this.toggle = this.toggle.bind(this);
+        this.getPendingBalance = this.getPendingBalance.bind(this)
+        this.withdrawBalance = this.withdrawBalance.bind(this)
+        this.walletInfo = this.walletInfo.bind(this)
     }
     
     componentDidMount() {
@@ -83,6 +89,7 @@ class CreateWalletComponent extends Component {
         const decryptedWallet = await client.decryptWallet(jsonwallet, openPassword)
         this.setState({decryptedWallet})
         this.walletInfo()
+        await this.getPendingBalance()
     }   
     
     async walletInfo () {
@@ -92,6 +99,33 @@ class CreateWalletComponent extends Component {
         this.setState({balance})
         const address = this.state.decryptedWallet.address
         this.setState({address})
+    }
+
+    async getPendingBalance() {
+        let client = new EthereumClient()
+        const jsonwallet = sessionStorage.getItem("jsonwallet")
+        const walletPassword = this.state.openPassword
+        console.log(walletPassword, 'walet')
+        const decryptedWallet = await client.decryptWallet(jsonwallet, walletPassword)
+        this.setState({decryptedWallet})
+        const wallet = new ethers.Wallet(decryptedWallet.privateKey, provider)
+        const contract = new ethers.Contract(address,abi,wallet)  
+        const pendingBalance = await contract.checkBalance()
+        const formatPendingBalance = ethers.utils.formatEther(pendingBalance)
+        this.setState({formatPendingBalance})
+    }
+
+    async withdrawBalance() {
+        let client = new EthereumClient()
+        const jsonwallet = sessionStorage.getItem("jsonwallet")
+        const walletPassword = this.state.openPassword
+        console.log(walletPassword, 'walet')
+        const decryptedWallet = await client.decryptWallet(jsonwallet, walletPassword)
+        this.setState({decryptedWallet})
+        const wallet = new ethers.Wallet(decryptedWallet.privateKey, provider)
+        const contract = new ethers.Contract(address,abi,wallet)    
+        const pendingBalance = await contract.cashOut()
+        this.setState({formatPendingBalance: 0 })        
     }
 
     showDiv() {
@@ -114,7 +148,12 @@ class CreateWalletComponent extends Component {
                                 <h1 className="display-4">Wallet</h1>    
                                 <h6>{`Balance: ${this.state.balance}`}</h6>
                                 <h6>{`Address: ${this.state.address}`}</h6>
-                                <Button className="button1" style={{margin: '1vh'}}>Withdraw</Button>
+                                {this.state.formatPendingBalance > 0 &&
+                                    <div>
+                                        <h6>{`Pending Balance: ${this.state.formatPendingBalance}`}</h6>
+                                        <Button className="button1" style={{margin: '1vh'}} onClick={this.withdrawBalance}>Withdraw</Button>
+                                    </div>
+                                }   
                             </div> 
                         </Col>
                     </Row>
@@ -125,7 +164,7 @@ class CreateWalletComponent extends Component {
                                 <InputGroup>
                                     <Input type="password" name="createPassword" id="createPassword" placeholder="password" onChange={this.handleInput}/>
                                     <InputGroupAddon addonType="prepend">
-                                        <Button block className="button1" onClick={this.generateWallet}>GENERATE WALLET</Button>
+                                        <Button block onClick={this.generateWallet}>GENERATE WALLET</Button>
                                     </InputGroupAddon>
                                 </InputGroup>
                             </div>
