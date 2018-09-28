@@ -8,7 +8,6 @@ contract PromotoFactory {
     **/
     struct Artist {
         string name;
-        string artistType;
         string description;
         string ipfsHash;
         bool isValidArtist;
@@ -74,25 +73,24 @@ contract PromotoFactory {
     /**
     * Modifier used to determine if the user is not a registered artist
     **/
-    modifier isNotAnArtist {
-        require(artists[msg.sender].isValidArtist == false);
+    modifier isNotAnArtist(address add) {
+        require(artists[add].isValidArtist == false);
         _;
     }
     /**
     * Used to check if the user is valid to register as an artist
     * Returns bool - Returns if it is true or false 
     **/
-    function validToRegister() public isNotAnArtist view returns (bool) {
+    function validToRegister(address add) public isNotAnArtist(add) view returns (bool) {
         return true;
     }
     /**
     * This is a function and its used to register as an artist.
     * @param _name string - The name of the artist.
-    * @param _artistType string - The type of the artist.
     * @param _description string - The description of the artist.
     **/
-    function registerArtist(string _name, string _artistType, string _description, string _ipfsHash) isNotAnArtist public {
-        artists[msg.sender] = Artist(_name, _artistType, _description, _ipfsHash, true, msg.sender, new address[](0));
+    function registerArtist(string _name, string _description, string _ipfsHash) isNotAnArtist(msg.sender) public {
+        artists[msg.sender] = Artist(_name, _description, _ipfsHash, true, msg.sender, new address[](0));
         artistsList.push(msg.sender);
     }
     /**
@@ -106,20 +104,20 @@ contract PromotoFactory {
     * Used to get the details of artist
     * @param _index uint - index of the artist in the array
     * Returns string - Returns the string name
-    * Returns string - Returns the type of the artistType
     * Returns string - Returns the description of the artist
     * Returns string - Returns the ipfs ipfsHash
     * Returns uint - Returns the number of subscribers
+    * Returns address - Return the address of the artist
     **/
-    function getArtist(uint _index) public view returns (string name, string artistType, string description, string ipfs, uint subscribersCount) {
+    function getArtist(uint _index) public view returns (string name, string description, string ipfs, uint subscribersCount, address artistAdd) {
         address artistAddress = artistsList[_index];
         Artist memory artist = artists[artistAddress];
         return (
             artist.name,
-            artist.artistType,
             artist.description,
             artist.ipfsHash,
-            artist.subscribersAddress.length
+            artist.subscribersAddress.length,
+            artistAddress
         );
     }
     /**
